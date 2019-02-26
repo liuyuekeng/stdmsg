@@ -7,6 +7,10 @@
     "build": "tsc",
     "test": "mocha test/**/*.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuyuekeng/stdmsg"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
