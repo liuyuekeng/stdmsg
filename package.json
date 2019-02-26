@@ -1,0 +1,17 @@
+{
+  "name": "@liuyuekeng/stdmsg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "output/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha test/**/*.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^11.9.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.0"
+  }
+}
