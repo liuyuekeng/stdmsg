@@ -2,30 +2,39 @@ import MsgParser from './msg/msg-parser';
 import {MsgParserOption} from './msg/msg-parser';
 import MsgWrapper from './msg/msg-wrapper';
 import {MsgWrapperOption} from './msg/msg-wrapper';
-import { Stream } from "stream";
-
-interface stdStream extends Stream {
-    setEncoding: Function
-}
+import {Writable, Readable} from "stream";
 
 export default class Stdmsg {
-    constructor(public id: string) {
+    constructor(public me: string,
+        public you: string,
+        public inputStream: Readable,
+        public outputStream: Writable) {
+        this.inputStream.setEncoding('utf8');
+        this.outputStream.setDefaultEncoding('utf8');
     }
-    sent(to: string, payload:any, opt?:  MsgWrapperOption) {
-        let wrapper = new MsgWrapper(this.id, opt);
-        let message = wrapper.wrap(to, payload);
-        console.log(message);
+    sent(payload:any, opt?:  MsgWrapperOption) {
+        let wrapper = new MsgWrapper(this.me, opt);
+        let message = wrapper.wrap(this.you, payload);
+        this.outputStream.write(message);
     }
-    listen(stdStream: stdStream, cb: Function): void
-    listen(stdStream: stdStream, opt: MsgParserOption, cb: Function): void
-    listen(stdStream: stdStream, optOrCb: Function|MsgParserOption, cb?: Function): void {
-        let _opt;
-        typeof optOrCb === 'function' ? cb = optOrCb : _opt = optOrCb;
-        stdStream.setEncoding('utf8');
-        let stdoutCb = (data: string) => {
-            let parser = new MsgParser(this.id, _opt, cb);
-            parser.parse(data);
+    listen(cb: Function): void
+    listen(opt: MsgParserOption, cb: Function): void
+    listen(optOrCb: Function|MsgParserOption, cb?: Function): void {
+        let _opt: MsgParserOption;
+        let _cb: Function;
+        if (typeof optOrCb === 'function') {
+            _cb = optOrCb;
+            _opt = {}
+        } else {
+            _cb = cb;
+            _opt = optOrCb;
         }
-        stdStream.on('data', stdoutCb);
+        let stdoutCb = () => {
+            let parser = new MsgParser(this.me, _opt, _cb);
+            return function (data: string) {
+                parser.parse(data);
+            }
+        }
+        this.inputStream.on('data', stdoutCb());
     }
 }

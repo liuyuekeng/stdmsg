@@ -3,23 +3,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const msg_parser_1 = require("./msg/msg-parser");
 const msg_wrapper_1 = require("./msg/msg-wrapper");
 class Stdmsg {
-    constructor(id) {
-        this.id = id;
+    constructor(me, you, inputStream, outputStream) {
+        this.me = me;
+        this.you = you;
+        this.inputStream = inputStream;
+        this.outputStream = outputStream;
+        this.inputStream.setEncoding('utf8');
+        this.outputStream.setDefaultEncoding('utf8');
     }
-    sent(to, payload, opt) {
-        let wrapper = new msg_wrapper_1.default(this.id, opt);
-        let message = wrapper.wrap(to, payload);
-        console.log(message);
+    sent(payload, opt) {
+        let wrapper = new msg_wrapper_1.default(this.me, opt);
+        let message = wrapper.wrap(this.you, payload);
+        this.outputStream.write(message);
     }
-    listen(stdStream, optOrCb, cb) {
+    listen(optOrCb, cb) {
         let _opt;
-        typeof optOrCb === 'function' ? cb = optOrCb : _opt = optOrCb;
-        stdStream.setEncoding('utf8');
-        let stdoutCb = (data) => {
-            let parser = new msg_parser_1.default(this.id, _opt, cb);
-            parser.parse(data);
+        let _cb;
+        if (typeof optOrCb === 'function') {
+            _cb = optOrCb;
+            _opt = {};
+        }
+        else {
+            _cb = cb;
+            _opt = optOrCb;
+        }
+        let stdoutCb = () => {
+            let parser = new msg_parser_1.default(this.me, _opt, _cb);
+            return function (data) {
+                parser.parse(data);
+            };
         };
-        stdStream.on('data', stdoutCb);
+        this.inputStream.on('data', stdoutCb());
     }
 }
 exports.default = Stdmsg;

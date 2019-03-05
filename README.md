@@ -1,11 +1,10 @@
 ```
 var StdMsg = require('stdmsg').default;
-let stdMsg = new StdMsg('me');
+let stdMsg = new StdMsg('me', 'you', inputStream, outputStream);
 ```
-stdMsg.listen(stdStream[, option], callback)
+stdMsg.listen([option,] callback)
 ---
 
-- stdStream <Stream> stdout or stdin
 - option <Object>
   - contentType <string> 'string'|'jsonStr'|... Default: jsonStr
 - callback
@@ -16,19 +15,18 @@ stdMsg.listen(stdStream[, option], callback)
 
 exp.
 ```
-stdMsg.listen(childProcess.stdout, {contentType: 'string'}, (err, data) => {
+stdMsg.listen({contentType: 'string'}, (err, data) => {
     console.log(data);
 });
 ```
-stdMsg.sent(to, payload[, option])
+stdMsg.sent(payload[, option])
 ---
 
-- to <string> id
 - payload <Object>|<string>|...
 - option <Object>
     contentType <string> 'string'|'jsonStr'|... Default: jsonStr
 
 exp.
 ```
-stdMsg.sent('you', {a: 1}, {contentType: 'string'});
+stdMsg.sent({a: 1}, {contentType: 'string'});
 ```
