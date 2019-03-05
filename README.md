@@ -19,7 +19,7 @@ stdMsg.listen({contentType: 'string'}, (err, data) => {
     console.log(data);
 });
 ```
-stdMsg.sent(payload[, option])
+stdMsg.send(payload[, option])
 ---
 
 - payload <Object>|<string>|...
@@ -28,5 +28,5 @@ stdMsg.sent(payload[, option])
 
 exp.
 ```
-stdMsg.sent({a: 1}, {contentType: 'string'});
+stdMsg.send({a: 1}, {contentType: 'string'});
 ```

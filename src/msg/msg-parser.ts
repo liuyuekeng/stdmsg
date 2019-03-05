@@ -1,14 +1,15 @@
-import {MsgContentType} from './base';
+import {MsgContentType, MsgHeader} from './base';
 
 export interface MsgParserOption {
     contentType?: MsgContentType
 }
+
 const msgHeadRegexp = /\[stdmsg:(\w+):(\w+):(\d+)\]/g;
 export default class MsgParser {
     remain: string
     remainLen: number
     unfinished: boolean
-    currentHeader: {from: string, to: string, len: string}
+    currentHeader: MsgHeader
     defaultOpt: MsgParserOption = {
         contentType: MsgContentType.JsonStr
     }

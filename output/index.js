@@ -11,7 +11,7 @@ class Stdmsg {
         this.inputStream.setEncoding('utf8');
         this.outputStream.setDefaultEncoding('utf8');
     }
-    sent(payload, opt) {
+    send(payload, opt) {
         let wrapper = new msg_wrapper_1.default(this.me, opt);
         let message = wrapper.wrap(this.you, payload);
         this.outputStream.write(message);

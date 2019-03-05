@@ -3,7 +3,7 @@ import {MsgParserOption} from './msg/msg-parser';
 import MsgWrapper from './msg/msg-wrapper';
 import {MsgWrapperOption} from './msg/msg-wrapper';
 import {Writable, Readable} from "stream";
-
+import {Msg} from './msg/base';
 export default class Stdmsg {
     constructor(public me: string,
         public you: string,
@@ -12,12 +12,12 @@ export default class Stdmsg {
         this.inputStream.setEncoding('utf8');
         this.outputStream.setDefaultEncoding('utf8');
     }
-    sent(payload:any, opt?:  MsgWrapperOption) {
+    send(payload:any, opt?:  MsgWrapperOption) {
         let wrapper = new MsgWrapper(this.me, opt);
         let message = wrapper.wrap(this.you, payload);
         this.outputStream.write(message);
     }
-    listen(cb: Function): void
+    listen(cb: (err: object|undefined, data: Msg) => void): void
     listen(opt: MsgParserOption, cb: Function): void
     listen(optOrCb: Function|MsgParserOption, cb?: Function): void {
         let _opt: MsgParserOption;
