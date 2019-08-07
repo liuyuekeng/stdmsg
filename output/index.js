@@ -10,6 +10,7 @@ class Stdmsg {
         this.outputStream = outputStream;
         this.inputStream.setEncoding('utf8');
         this.outputStream.setDefaultEncoding('utf8');
+        this.callbacks = [];
     }
     send(payload, opt) {
         let wrapper = new msg_wrapper_1.default(this.me, opt);
@@ -34,6 +35,12 @@ class Stdmsg {
             };
         };
         this.inputStream.on('data', stdoutCb());
+        this.callbacks.push(stdoutCb());
+    }
+    close() {
+        this.callbacks.forEach(cb => {
+            this.inputStream.removeListener('data', cb);
+        });
     }
 }
 exports.default = Stdmsg;

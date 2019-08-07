@@ -5,12 +5,14 @@ import {MsgWrapperOption} from './msg/msg-wrapper';
 import {Writable, Readable} from "stream";
 import {Msg} from './msg/base';
 export default class Stdmsg {
+    callbacks: any[];
     constructor(public me: string,
         public you: string,
         public inputStream: Readable,
         public outputStream: Writable) {
         this.inputStream.setEncoding('utf8');
         this.outputStream.setDefaultEncoding('utf8');
+        this.callbacks = [];
     }
     send(payload:any, opt?:  MsgWrapperOption) {
         let wrapper = new MsgWrapper(this.me, opt);
@@ -36,5 +38,11 @@ export default class Stdmsg {
             }
         }
         this.inputStream.on('data', stdoutCb());
+        this.callbacks.push(stdoutCb());
+    }
+    close(): void {
+        this.callbacks.forEach(cb => {
+            this.inputStream.removeListener('data', cb);
+        });
     }
 }
