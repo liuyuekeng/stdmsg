@@ -1,6 +1,6 @@
 {
   "name": "@liuyuekeng/stdmsg",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "output/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/node": "^11.9.4",
     "chai": "^4.2.0",
-    "mocha": "^6.0.0"
+    "mocha": "^6.0.0",
+    "typescript": "^3.7.4"
   }
 }

@@ -34,8 +34,9 @@ class Stdmsg {
                 parser.parse(data);
             };
         };
-        this.inputStream.on('data', stdoutCb());
-        this.callbacks.push(stdoutCb());
+        const listener = stdoutCb();
+        this.inputStream.on('data', listener);
+        this.callbacks.push(listener);
     }
     close() {
         this.callbacks.forEach(cb => {
